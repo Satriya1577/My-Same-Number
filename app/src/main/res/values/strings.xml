@@ -14,4 +14,5 @@
     <string name="your_current_score">Current score</string>
     <string name="give_up">Give up</string>
     <string name="end_game">End game</string>
+    <string name="set_random_number_range">Set random number range</string>
 </resources>

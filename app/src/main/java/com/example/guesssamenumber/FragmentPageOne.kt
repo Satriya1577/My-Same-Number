@@ -39,6 +39,7 @@ class FragmentPageOne : Fragment() {
 
     private lateinit var btnGiveUp: Button
     private lateinit var btnEndGame: Button
+    private lateinit var btnSetRandomNumber: Button
 
     private var valueFromBlock1: TextView? = null
     private var valueFromBlock2: TextView? = null
@@ -83,6 +84,21 @@ class FragmentPageOne : Fragment() {
                     tempValue = null
                 }
             }
+        }
+
+        if (playerScore <= 0) {
+            val bundle = Bundle()
+            bundle.putInt("int_final_score_value", playerScore)
+            val fragmentPageTwo = FragmentPageTwo()
+            fragmentPageTwo.arguments = bundle
+            val fragmentManager = parentFragmentManager
+            fragmentManager.beginTransaction()
+                .replace(
+                    R.id.frameContainer,
+                    fragmentPageTwo,
+                    FragmentPageTwo::class.java.simpleName
+                )
+                .commit()
         }
     }
 
@@ -147,26 +163,52 @@ class FragmentPageOne : Fragment() {
     private fun initializeActionButton(view: View) {
         btnGiveUp = view.findViewById(R.id.btnGiveUp)
         btnGiveUp.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putInt("int_final_score_value", playerScore)
             val fragmentPageTwo = FragmentPageTwo()
+            fragmentPageTwo.arguments = bundle
             val fragmentManager = parentFragmentManager
-//            fragmentManager.beginTransaction()
-//                .replace(
-//                    R.id.frameContainer,
-//                    fragmentPageTwo,
-//                    FragmentPageTwo::class.java.simpleName
-//                )
-//                .addToBackStack(null)
-//                .commit()
+            fragmentManager.beginTransaction()
+                .replace(
+                    R.id.frameContainer,
+                    fragmentPageTwo,
+                    FragmentPageTwo::class.java.simpleName
+                )
+                .commit()
         }
 
         btnEndGame = view.findViewById(R.id.btnEndGame)
         btnEndGame.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putInt("int_final_score_value", playerScore)
+            val fragmentPageTwo = FragmentPageTwo()
+            fragmentPageTwo.arguments = bundle
+            val fragmentManager = parentFragmentManager
+            fragmentManager.beginTransaction()
+                .replace(
+                    R.id.frameContainer,
+                    fragmentPageTwo,
+                    FragmentPageTwo::class.java.simpleName
+                )
+                .commit()
 
+        }
+
+        btnSetRandomNumber = view.findViewById(R.id.btnSetRandomNumber)
+        btnSetRandomNumber.setOnClickListener {
+            val fragmentPageThree = FragmentPageThree()
+            val fragmentManager = parentFragmentManager
+            fragmentManager.beginTransaction()
+                .replace(
+                    R.id.frameContainer,
+                    fragmentPageThree,
+                    FragmentPageThree::class.java.simpleName
+                )
+                .commit()
         }
     }
 
     private fun checkGame(value1: TextView?, value2: TextView?) {
-
         if (value1?.text.toString() == value2?.text.toString()) {
             this.playerScore += 10
             if (value1 != null) {

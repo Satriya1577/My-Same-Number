@@ -15,7 +15,6 @@ class FragmentPageThree : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_page_three, container, false)
     }
 
@@ -26,18 +25,22 @@ class FragmentPageThree : Fragment() {
         val maxValue: EditText = view.findViewById(R.id.edMaxValue)
         val buttonSubmit: Button = view.findViewById(R.id.btnSubmit)
         val fragmentManager = parentFragmentManager
-        val fragmentHalamanSatu = FragmentPageOne()
+        val fragmentPageOne = FragmentPageOne()
 
         buttonSubmit.setOnClickListener {
             val bundle = Bundle()
             bundle.putInt("int_min_value", minValue.text.toString().toInt())
             bundle.putInt("int_max_value", maxValue.text.toString().toInt())
-            fragmentHalamanSatu.arguments = bundle
+            fragmentPageOne.arguments = bundle
 
             Toast.makeText(requireActivity(), "Min dan Max berhasil diset", Toast.LENGTH_SHORT).show()
             fragmentManager
                 .beginTransaction()
-                .replace(R.id.frameContainer, fragmentHalamanSatu, FragmentPageOne::class.java.simpleName)
+                .replace(
+                    R.id.frameContainer,
+                    fragmentPageOne,
+                    FragmentPageOne::class.java.simpleName
+                )
                 .commit()
         }
     }
