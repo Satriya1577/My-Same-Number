@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/halaman_satu"
+        android:title="@string/halaman_satu"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/halaman_dua"
+        android:title="@string/halaman_dua"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/halaman_tiga"
+        android:title="@string/halaman_tiga"
+        app:showAsAction="never" />
+</menu>

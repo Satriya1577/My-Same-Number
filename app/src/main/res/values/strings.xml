@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Guess Same Number</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="halaman_satu">Halaman 1</string>
+    <string name="halaman_dua">Halaman 2</string>
+    <string name="halaman_tiga">Halaman 3</string>
+    <string name="min">Min value</string>
+    <string name="max">Max value</string>
+    <string name="submit">Submit</string>
+    <string name="final_score">Your final score</string>
+    <string name="play_again">Play again</string>
+    <string name="score">50</string>
+    <string name="your_current_score">Current score</string>
+    <string name="give_up">Give up</string>
+    <string name="end_game">End game</string>
+</resources>
