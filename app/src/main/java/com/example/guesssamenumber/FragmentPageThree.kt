@@ -8,8 +8,11 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 
 class FragmentPageThree : Fragment() {
+
+    private lateinit var sharedViewModel: SharedViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -20,20 +23,19 @@ class FragmentPageThree : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
         val minValue: EditText = view.findViewById(R.id.edMinValue)
         val maxValue: EditText = view.findViewById(R.id.edMaxValue)
         val buttonSubmit: Button = view.findViewById(R.id.btnSubmit)
-        val fragmentManager = parentFragmentManager
-        val fragmentPageOne = FragmentPageOne()
 
         buttonSubmit.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putInt("int_min_value", minValue.text.toString().toInt())
-            bundle.putInt("int_max_value", maxValue.text.toString().toInt())
-            fragmentPageOne.arguments = bundle
+            val min: Int = minValue.text.toString().toInt()
+            val max: Int = maxValue.text.toString().toInt()
+            sharedViewModel.setRange(Range(min,max))
 
             Toast.makeText(requireActivity(), "Min dan Max berhasil diset", Toast.LENGTH_SHORT).show()
+            val fragmentManager = parentFragmentManager
+            val fragmentPageOne = FragmentPageOne()
             fragmentManager
                 .beginTransaction()
                 .replace(

@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -47,6 +48,8 @@ class FragmentPageOne : Fragment() {
     
     private var listOfPressed = ArrayList<TextView>()
 
+    private lateinit var sharedViewModel: SharedViewModel
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,49 +60,17 @@ class FragmentPageOne : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
 
-        arguments?.let { bundle ->
-            this.minValue = bundle.getInt("int_min_value")
-            this.maxValue = bundle.getInt("int_max_value")
+        sharedViewModel.range.observe(viewLifecycleOwner) { range ->
+            setRange(range)
+            runTheGame(view)
         }
+    }
 
-
-        initializeActionButton(view)
-        initializeGameComponents(view)
-        getPlayerChoice()
-        viewLifecycleOwner.lifecycleScope.launch {
-            while (playerScore >= 0) {
-                if (listOfPressed.size == 12) {
-                    initializeGameComponents(view)
-                    getPlayerChoice()
-                    listOfPressed.clear()
-                }
-                delay(2000) // Wait for player actions
-                if (valueFromBlock1 != null && valueFromBlock2 != null) {
-                    checkGame(valueFromBlock1, valueFromBlock2)
-
-                    // Reset for the next turn
-                    valueFromBlock1 = null
-                    valueFromBlock2 = null
-                    tempValue = null
-                }
-            }
-        }
-
-        if (playerScore <= 0) {
-            val bundle = Bundle()
-            bundle.putInt("int_final_score_value", playerScore)
-            val fragmentPageTwo = FragmentPageTwo()
-            fragmentPageTwo.arguments = bundle
-            val fragmentManager = parentFragmentManager
-            fragmentManager.beginTransaction()
-                .replace(
-                    R.id.frameContainer,
-                    fragmentPageTwo,
-                    FragmentPageTwo::class.java.simpleName
-                )
-                .commit()
-        }
+    private fun setRange(range: Range) {
+        this.minValue = range.min
+        this.maxValue = range.max
     }
 
     private fun initializeGameComponents(view: View) {
@@ -163,10 +134,8 @@ class FragmentPageOne : Fragment() {
     private fun initializeActionButton(view: View) {
         btnGiveUp = view.findViewById(R.id.btnGiveUp)
         btnGiveUp.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putInt("int_final_score_value", playerScore)
+            sharedViewModel.setScore(this.playerScore)
             val fragmentPageTwo = FragmentPageTwo()
-            fragmentPageTwo.arguments = bundle
             val fragmentManager = parentFragmentManager
             fragmentManager.beginTransaction()
                 .replace(
@@ -179,10 +148,8 @@ class FragmentPageOne : Fragment() {
 
         btnEndGame = view.findViewById(R.id.btnEndGame)
         btnEndGame.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putInt("int_final_score_value", playerScore)
+            sharedViewModel.setScore(this.playerScore)
             val fragmentPageTwo = FragmentPageTwo()
-            fragmentPageTwo.arguments = bundle
             val fragmentManager = parentFragmentManager
             fragmentManager.beginTransaction()
                 .replace(
@@ -191,7 +158,6 @@ class FragmentPageOne : Fragment() {
                     FragmentPageTwo::class.java.simpleName
                 )
                 .commit()
-
         }
 
         btnSetRandomNumber = view.findViewById(R.id.btnSetRandomNumber)
@@ -258,5 +224,46 @@ class FragmentPageOne : Fragment() {
         } else if (valueFromBlock2 == null) {
             valueFromBlock2 = tempValue
         }
+    }
+
+    private fun runTheGame(view: View) {
+        initializeActionButton(view)
+        initializeGameComponents(view)
+        getPlayerChoice()
+        viewLifecycleOwner.lifecycleScope.launch {
+            while (playerScore >= 0) {
+                if (listOfPressed.size == 12) {
+                    initializeGameComponents(view)
+                    getPlayerChoice()
+                    listOfPressed.clear()
+                }
+                delay(2000) // Wait for player actions
+                if (valueFromBlock1 != null && valueFromBlock2 != null) {
+                    checkGame(valueFromBlock1, valueFromBlock2)
+
+                    // Reset for the next turn
+                    valueFromBlock1 = null
+                    valueFromBlock2 = null
+                    tempValue = null
+                }
+                if (playerScore <= 0) {
+                    val fragmentPageTwo = FragmentPageTwo()
+                    sharedViewModel.setScore(playerScore)
+                    val fragmentManager = parentFragmentManager
+                    fragmentManager.beginTransaction()
+                        .replace(
+                            R.id.frameContainer,
+                            fragmentPageTwo,
+                            FragmentPageTwo::class.java.simpleName
+                        )
+                        .commit()
+                }
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        sharedViewModel.setScore(this.playerScore)
     }
 }
